@@ -37,11 +37,6 @@ ALLOWED_HOSTS = ['*']
 
 
 
-STATICFILES_DIRS = [
-    "/home/atazhan/Desktop/cultural guide/cultural_guide/static",
-]
-
-
 
 
 # Application definition
