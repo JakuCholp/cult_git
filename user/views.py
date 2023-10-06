@@ -129,7 +129,21 @@ class VerificationCodeAPIView(APIView):
                 user.save()
                 return Response({'message': 'Verification code is valid.'}, status=status.HTTP_200_OK)
             else:
-                return Response({'error': 'Invalid verification code.'}, status=status.HTTP_400_BAD_REQUEST)
+                user = Organizer.objects.filter(email_token=verification_code).first()
+                if user:
+                    my_data = user.date_of_join
+                    current_time = timezone.now()
+                    time_difference = current_time - my_data
+                    time_difference_in_minutes = time_difference.total_seconds() / 60
+                    if time_difference_in_minutes > 3:
+                        user.delete()
+                        return Response({'message': "oops"})
+                    user.is_email_confirmed = True
+                    user.save()
+                    return Response({'message': 'Verification code is valid.'}, status=status.HTTP_200_OK)
+                else:
+                    return Response({'error': 'Invalid verification code.'}, status=status.HTTP_400_BAD_REQUEST)
+
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

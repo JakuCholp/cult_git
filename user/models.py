@@ -49,4 +49,6 @@ class Organizer(models.Model):
     gender = models.CharField(max_length=100, choices=GENDER_CHOICES)
     date_of_birth =models.DateField(null=True, blank=True)
     date_of_join = models.DateTimeField(auto_now_add=True)
+    email_token = models.IntegerField(null=True, blank=True)
+    is_email_confirmed = models.BooleanField(default=False)
 
