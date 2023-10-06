@@ -13,6 +13,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from .serializers import VerificationCodeSerializer
 from drf_spectacular.utils import extend_schema
+from django.utils import timezone
 
 
 def authenticate_Organizer(username, password):
@@ -116,8 +117,14 @@ class VerificationCodeAPIView(APIView):
         if serializer.is_valid():
             verification_code = serializer.validated_data['verification_code']
             user = Ord_user.objects.filter(email_token=verification_code).first()
-
             if user:
+                my_data = user.date_of_join
+                current_time = timezone.now()
+                time_difference = current_time - my_data
+                time_difference_in_minutes = time_difference.total_seconds() / 60
+                if time_difference_in_minutes > 3:
+                    user.delete()
+                    return Response({'message': "oops"})
                 user.is_email_confirmed = True
                 user.save()
                 return Response({'message': 'Verification code is valid.'}, status=status.HTTP_200_OK)
