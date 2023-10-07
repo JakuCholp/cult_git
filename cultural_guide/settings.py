@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-hwli-cp!(=ordzt2#=*n_%jego_huyhkw_c(@b7-x6616*tzlg
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-    
+
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
@@ -34,8 +34,9 @@ STATICFILES_DIRS = [
 STATIC_ROOT =  os.path.join(BASE_DIR, 'staticfiles')
 ALLOWED_HOSTS = ['*']
 
-CORS_ORIGIN_ALLOW_ALL = True
 
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
 
 
 

@@ -20,6 +20,7 @@ class Event(models.Model):
     ticket_price = models.DecimalField(max_digits=10, decimal_places=2)
     count_user = models.IntegerField(default=0)
     max_capacity = models.IntegerField()
+    duration = models.PositiveIntegerField(default=0)
 
 
 class Favorite(models.Model):

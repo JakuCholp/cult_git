@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import viewsets
+from rest_framework import viewsets, filters
 from .models import Event, Favorite,  Comment, Event_Category, Reviews
 from .serializers import EventSerializer, FavoriteSerializer, ReviewsSerializer, CommentSerializer, EventCategorySerializer
 from rest_framework.views import APIView
@@ -9,11 +9,16 @@ from rest_framework import status
 from drf_spectacular.utils import extend_schema
 from django.db.models import Q
 from datetime import timedelta
+from django_filters import rest_framework as dj_filters
+from .filters import EventFilter
 
 class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
-    
+    filter_backends = (dj_filters.DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter)
+    filterset_class = EventFilter
+    search_fields = ['description', 'location', 'title', 'event_type__name']
+
 
 
 class FavoriteViewSet(viewsets.ModelViewSet):
