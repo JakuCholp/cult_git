@@ -70,4 +70,3 @@ class OrganizerSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=255)
     password = serializers.CharField(max_length=255)
-    role = serializers.CharField(max_length = 255)
