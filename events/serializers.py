@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Event, Favorite,Comment, Event_Category, Reviews
+from .models import Event, Favorite,Comment, Event_Category
 
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
