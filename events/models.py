@@ -29,24 +29,19 @@ class Favorite(models.Model):
     organizer = models.ForeignKey(Organizer, on_delete=models.CASCADE)
 
 
-class Reviews(models.Model):
-    event = models.ForeignKey(Event, on_delete = models.CASCADE)
-    ord_user = models.ForeignKey(Ord_user, on_delete=models.CASCADE)
-    organizer = models.ForeignKey(Organizer, on_delete=models.CASCADE)
-    text = models.TextField()
-    rating = models.IntegerField()
-    date_created = models.DateTimeField(auto_now_add=True)
-
 
 class Comment(models.Model):
     event = models.ForeignKey(Event, on_delete = models.CASCADE)
-    ord_user = models.ForeignKey(Ord_user, on_delete=models.CASCADE)
-    organizer = models.ForeignKey(Organizer, on_delete=models.CASCADE)
+    ord_user = models.ForeignKey(Ord_user, on_delete=models.CASCADE, null=True, blank=True)
+    organizer = models.ForeignKey(Organizer, on_delete=models.CASCADE, null=True, blank=True)
     text = models.TextField()
     date_created = models.DateTimeField(auto_now_add=True)
 
 
 
 
+
+
+# class Event_Statistic(models.Model):
 
 
