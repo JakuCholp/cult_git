@@ -93,19 +93,19 @@ class LoginView(APIView):
         user = authenticate_Ord_user(username=username, password=password)
 
         if user:
-            acces_token = generate_token(user, role)
-            token_str = acces_token.decode('utf-8')
+            access_token = generate_token(user, role)
+            token_str = access_token.decode('utf-8')
             refresh_token = generate_refresh_token(user, role)
             ref_token_str = refresh_token.decode('utf-8')
             return JsonResponse({'token': token_str}, {'refresh': refresh_token}, status=200)
         else:
             user = authenticate_Organizer(username=username, password=password)
             if user:
-                acces_token = generate_token(user, role)
-                token_str = acces_token.decode('utf-8')
+                access_token = generate_token(user, role)
+                token_str = access_token.decode('utf-8')
                 refresh_token = generate_refresh_token(user, role)
                 ref_token_str = refresh_token.decode('utf-8')
-                return JsonResponse({'token': token_str}, {'refresh': refresh_token}, status=200)
+                return JsonResponse({'token': token_str, 'refresh': refresh_token}, status=200)
             else:
                 return JsonResponse({'error': 'Invalid credentials'}, status=400)
 
