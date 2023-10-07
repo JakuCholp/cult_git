@@ -1,5 +1,6 @@
 from django.db import models
 from user.models import Ord_user, Organizer
+from django.core.exceptions import ValidationError
 
 
 # Create your models here.
@@ -28,6 +29,11 @@ class Favorite(models.Model):
     ord_user = models.ForeignKey(Ord_user, on_delete=models.CASCADE)
     organizer = models.ForeignKey(Organizer, on_delete=models.CASCADE)
 
+    def clean(self):
+        # Check that at least one of ord_user or organizer is provided
+        if not self.ord_user and not self.organizer:
+            raise ValidationError('At least one of ord_user or organizer must be provided.')
+
 
 
 class Comment(models.Model):
@@ -36,6 +42,10 @@ class Comment(models.Model):
     organizer = models.ForeignKey(Organizer, on_delete=models.CASCADE, null=True, blank=True)
     text = models.TextField()
     date_created = models.DateTimeField(auto_now_add=True)
+
+    def clean(self):
+        if not self.ord_user and not self.organizer:
+            raise ValidationError('At least one of ord_user or organizer must be provided.')
 
 
 
