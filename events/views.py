@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets, filters
 from .models import Event, Favorite,  Comment, Event_Category
-from .serializers import EventSerializer, FavoriteSerializer, ReviewsSerializer, CommentSerializer, EventCategorySerializer
+from .serializers import EventSerializer, FavoriteSerializer, CommentSerializer, EventCategorySerializer
 from rest_framework.views import APIView
 from django.utils import timezone
 from rest_framework.response import Response
