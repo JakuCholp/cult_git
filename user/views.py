@@ -40,6 +40,7 @@ SECRET_KEY = "django-insecure-hwli-cp!(=ordzt2#=*n_%jego_huyhkw_c(@b7-x6616*tzlg
 def generate_token(user, role):
     payload = {
         'user_name': user.username,
+        'token_type': 'access',
         'role': role,
         'exp': datetime.utcnow() + timedelta(days=1) 
     }
@@ -56,7 +57,19 @@ def decode_token(token):
     except jwt.InvalidTokenError:
         # Неверный токен
         return None
+    
 
+
+
+def generate_refresh_token(user, role):
+    payload = {
+        'user_name': user.username,
+        'token_type': 'refresh',
+        'role': role,
+        'exp': datetime.utcnow() + timedelta(days=30)  
+    }
+    refresh_token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+    return refresh_token
 
 
 
@@ -82,9 +95,11 @@ class LoginView(APIView):
             user = authenticate_Ord_user(username=username, password=password)
 
         if user:
-            token = generate_token(user, role)
-            token_str = token.decode('utf-8')
-            return JsonResponse({'token': token_str}, status=200)
+            acces_token = generate_token(user, role)
+            token_str = acces_token.decode('utf-8')
+            refresh_token = generate_refresh_token(user, role)
+            ref_token_str = refresh_token.decode('utf-8')
+            return JsonResponse({'token': token_str}, {'refresh': refresh_token}, status=200)
         else:
             return JsonResponse({'error': 'Invalid credentials'}, status=400)
 

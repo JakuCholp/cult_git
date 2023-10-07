@@ -32,3 +32,4 @@ class EventCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Event_Category
         fields = '__all__'
+
