@@ -42,7 +42,6 @@ class Organizer(models.Model):
     last_name = models.CharField(max_length=100)
     company_name = models.CharField(max_length=100)
     role = 'Organizer'
-    middle_name = models.CharField(max_length=100,null=True, blank=True)
     email = models.EmailField(unique=True)
     photo = models.ImageField(upload_to='profile', default='profile/logo.png')    
     phone_number = PhoneNumberField(unique = True)
