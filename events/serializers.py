@@ -14,11 +14,6 @@ class FavoriteSerializer(serializers.ModelSerializer):
 
 
 
-class ReviewsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Reviews
-        fields = '__all__'
-
 
 
 class CommentSerializer(serializers.ModelSerializer):
