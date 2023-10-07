@@ -26,8 +26,8 @@ class Event(models.Model):
 
 class Favorite(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    ord_user = models.ForeignKey(Ord_user, on_delete=models.CASCADE)
-    organizer = models.ForeignKey(Organizer, on_delete=models.CASCADE)
+    ord_user = models.ForeignKey(Ord_user, on_delete=models.CASCADE, null=True, blank=True)
+    organizer = models.ForeignKey(Organizer, on_delete=models.CASCADE, null=True, blank=True)
 
     def clean(self):
         # Check that at least one of ord_user or organizer is provided
