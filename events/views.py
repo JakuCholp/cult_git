@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from drf_spectacular.utils import extend_schema
 from django.db.models import Q
+from datetime import timedelta
 
 class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
@@ -62,3 +63,19 @@ class TomorrowEventsView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
 
+
+
+class WeekEventsView(APIView):
+    def get(self, request):
+
+        current_datetime = timezone.now()
+        start_of_week = current_datetime - timedelta(days=current_datetime.weekday())
+        end_of_week = start_of_week + timedelta(days=6)
+
+        queryset = Event.objects.filter(
+            Q(start_datetime__gte=start_of_week) &
+            Q(start_datetime__lte=end_of_week)
+        )
+
+        serializer = EventSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
