@@ -27,14 +27,6 @@ SECRET_KEY = 'django-insecure-hwli-cp!(=ordzt2#=*n_%jego_huyhkw_c(@b7-x6616*tzlg
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
-STATIC_ROOT =  os.path.join(BASE_DIR, 'staticfiles')
-ALLOWED_HOSTS = ['*']
-
-CORS_ALLOW_ALL_ORIGINS = True
 
 
 
@@ -54,9 +46,6 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'drf_spectacular_sidecar',
     'corsheaders',
-
-
-    
 ]
 
 MIDDLEWARE = [
@@ -180,3 +169,14 @@ EMAIL_HOST_USER='Atazhanch@gmail.com'
 EMAIL_HOST_PASSWORD='pskqqupllaqlkcvi'
 EMAIL_USE_TLS=True
 EMAIL_USE_SSL=False
+
+
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+STATIC_ROOT =  os.path.join(BASE_DIR, 'staticfiles')
+ALLOWED_HOSTS = ['*']
+
+CORS_ALLOW_ALL_ORIGINS = True
+
