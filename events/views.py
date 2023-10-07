@@ -13,6 +13,7 @@ from datetime import timedelta
 class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
+    
 
 
 class FavoriteViewSet(viewsets.ModelViewSet):
