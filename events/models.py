@@ -1,6 +1,7 @@
 from django.db import models
 from user.models import Ord_user, Organizer
 from django.core.exceptions import ValidationError
+from user.models import Organizer
 
 
 # Create your models here.
@@ -12,6 +13,7 @@ class Event_Category(models.Model):
 
 class Event(models.Model):
     title = models.CharField(max_length=255)
+    creator = models.ForeignKey(Organizer, on_delete=models.CASCADE)
     event_type = models.ForeignKey(Event_Category, on_delete=models.CASCADE)
     description = models.TextField()
     start_datetime = models.DateTimeField()
@@ -52,6 +54,13 @@ class Comment(models.Model):
 
 
 
-# class Event_Statistic(models.Model):
+class Event_Statistic(models.Model):
+    event = models.OneToOneField(Event, on_delete=models.CASCADE)
+    number_of_registered_users = models.IntegerField(null=True, blank=True)
+    number_of_arrivals = models.IntegerField()
+    was_spent = models.IntegerField()
+    was_recived = models.IntegerField(null=True, blank=True)
+    income = models.IntegerField(null=True, blank=True)
+    more_than_aver = models.IntegerField(null=True, blank=True)
 
 

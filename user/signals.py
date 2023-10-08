@@ -1,10 +1,11 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.core.mail import send_mail
 from django.conf import settings
 from .models import Ord_user, Organizer
 import random
 import string
+from django.core.exceptions import ValidationError
 
 
 
@@ -47,3 +48,11 @@ def send_verification_code_org(sender, instance, created, **kwargs):
             [email], 
 
         )
+
+
+
+@receiver(pre_save, sender=Organizer)
+def check_existing_username(sender, instance, **kwargs):
+    existing_user = Ord_user.objects.filter(username=instance.username).exists()
+    if existing_user:
+        raise ValidationError('Пользователь с таким username уже существует в модели OrdUser.')

@@ -12,7 +12,7 @@ class Ord_user(models.Model):
         ('female', 'female'),
     ]
 
-    username = models.CharField(max_length=100)
+    username = models.CharField(max_length=100, unique=True)
     password = models.CharField(max_length=100, blank=True, null=True)
     last_name = models.CharField(max_length=100)
     first_name = models.CharField(max_length=100,null=True, blank=True)
@@ -25,6 +25,7 @@ class Ord_user(models.Model):
     date_of_join = models.DateTimeField(auto_now_add=True)
     email_token = models.IntegerField(null=True, blank=True)
     is_email_confirmed = models.BooleanField(default=False)
+    recover_token = models.IntegerField(null=True, blank=True)
 
 
 
@@ -36,7 +37,7 @@ class Organizer(models.Model):
         ('female', 'female'),
     ]
 
-    username = models.CharField(max_length=100)
+    username = models.CharField(max_length=100, unique=True)
     password = models.CharField(max_length=100, blank=True, null=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -50,4 +51,5 @@ class Organizer(models.Model):
     date_of_join = models.DateTimeField(auto_now_add=True)
     email_token = models.IntegerField(null=True, blank=True)
     is_email_confirmed = models.BooleanField(default=False)
+    recover_token = models.IntegerField(null=True, blank=True)
 

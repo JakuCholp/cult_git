@@ -1,7 +1,7 @@
 from django.shortcuts import render
 import jwt
 from datetime import datetime, timedelta
-from .serializers import Ord_userSerializer, OrganizerSerializer, LoginSerializer
+from .serializers import Ord_userSerializer, OrganizerSerializer, LoginSerializer,RecoverPasswordSerializer, VerificationPasswordCodeSerializer, NewPasswordSerializer
 from rest_framework.decorators import permission_classes
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
@@ -14,6 +14,14 @@ from rest_framework.response import Response
 from .serializers import VerificationCodeSerializer
 from drf_spectacular.utils import extend_schema
 from django.utils import timezone
+from django.conf import settings
+import random
+import smtplib
+from django.core.mail import send_mail
+from django.contrib.auth.hashers import make_password
+
+
+
 
 
 def authenticate_Organizer(username, password):
@@ -171,5 +179,102 @@ class VerificationCodeAPIView(APIView):
 
 
 
+
+
+
+class SendToRecoverPassword(APIView):
+    @extend_schema(
+        description=" send Recover_token Password",
+        request= RecoverPasswordSerializer,
+        responses={200: {"message": "code successfully sended."}}
+        )
+    def post(self, request):
+        serializer = RecoverPasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            username = serializer.validated_data['username']
+
+            verification_code = ''.join([str(random.randint(0, 9)) for i in range(6)])
+
+            try:
+                user = Ord_user.objects.get(username=username)
+                user.recover_token = verification_code
+                user.save()
+            except:
+                user = Organizer.objects.get(username=username)
+                user.recover_token = verification_code
+                user.save()
+            
+
+
+        
+            subject = 'Восстановление пароля'
+            message = f'Здравствуйте, {username}!\n\nВаш код для восстановле пароля: {verification_code}\n\nС уважением,\nВаша команда.'
+            from_email = settings.EMAIL_HOST_USER
+            to_email = [email]
+            
+            try:
+
+                send_mail(subject, message, from_email, to_email)
+                return Response({'message': 'Код отправлен на указанный адрес.'}, status=status.HTTP_200_OK)
+            except smtplib.SMTPException:
+                return Response({'message': 'Произошла ошибка при отправке письма.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response({'message': 'Неверные данные.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+class VerificationPasswordCodeAPIView(APIView):
+    @extend_schema(
+        description="Recover Password",
+        request= VerificationPasswordCodeSerializer,
+        responses={200: {"message": "code successfully checked."}}
+        )
+    
+    def post(self, request):
+        serializer = VerificationPasswordCodeSerializer(data=request.data)
+        if serializer.is_valid():
+            verification_code = serializer.validated_data['verification_ps_code']
+            user = Ord_user.objects.filter(recover_token=verification_code).first()
+            if user:
+                return Response({'message': ' code is valid.'}, status=status.HTTP_200_OK)
+            else:
+                user = Organizer.objects.filter(recover_token=verification_code).first()
+                if user:
+                    return Response({'message': 'code is valid.'}, status=status.HTTP_200_OK)
+                else:
+                    return Response({'error': 'Invalid verification code.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+
+
+
+class NewPasswordView(APIView):
+    @extend_schema(
+        description="new Password",
+        request= NewPasswordSerializer,
+        responses={200: {"message": "password successfully changed."}}
+        )
+    def post(self, request):
+        serializer = NewPasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            password = serializer.validated_data['password']
+            confirm_password = serializer.validated_data['confirm_password']
+            username = serializer.validated_data['username']
+            try:
+                user = Ord_user.objects.get(username=username)
+            except:
+                user = Organizer.objects.get(username=username)
+
+            if password == confirm_password:
+                user.password = make_password(password)
+                user.save()
+                return Response({'message': ' PASSWORD is changed.'}, status=status.HTTP_200_OK)
+            else:
+                return Response({'error': 'mistake.'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
 
 

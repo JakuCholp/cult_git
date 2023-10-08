@@ -70,3 +70,21 @@ class OrganizerSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=255)
     password = serializers.CharField(max_length=255)
+
+
+
+class RecoverPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    username = serializers.CharField(max_length = 255)
+
+
+
+class VerificationPasswordCodeSerializer(serializers.Serializer):
+    verification_ps_code = serializers.CharField(max_length=6, min_length=6, required=True)
+
+
+
+class NewPasswordSerializer(serializers.Serializer):
+    password = serializers.CharField(max_length = 255)
+    confirm_password = serializers.CharField(max_length = 255)
+    username = serializers.CharField(max_length = 255)
