@@ -35,12 +35,22 @@ class FavoriteViewSet(viewsets.ModelViewSet):
     queryset = Favorite.objects.all()
     serializer_class = FavoriteSerializer
 
+    def create(self, request, *args, **kwargs):
+        return Response({"detail": "Method 'POST' not allowed on this endpoint."},
+                        status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
 
 
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+
+    def create(self, request, *args, **kwargs):
+        return Response({"detail": "Method 'POST' not allowed on this endpoint."},
+                        status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
 
 
 
