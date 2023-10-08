@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import EventViewSet, FavoriteViewSet,  CommentViewSet, EventCategoryViewSet, TodaysEventView, TomorrowEventsView, WeekEventsView, EventStatView,  Event_StatisticView, CreateEventView, CreateFavoriteView, CreateCommentView
+from .views import EventViewSet, FavoriteViewSet,  CommentViewSet, EventCategoryViewSet, TodaysEventView, TomorrowEventsView, WeekEventsView, EventStatView,  Event_StatisticView
 
 router = DefaultRouter()
 router.register(r'events', viewset = EventViewSet, basename='events')
@@ -17,7 +17,5 @@ urlpatterns = [
     path('tomorrow/',TomorrowEventsView.as_view(), name='tomorrow'),
     path('week/', WeekEventsView.as_view(), name='week'),
     path('statistic/', EventStatView.as_view(), name = 'static'),
-    path('create_event/', CreateEventView.as_view(), name = 'create_event'),
-    path('create_favorite/', CreateFavoriteView.as_view(), name = 'create_favorite'),
-    path('create_comment/', CreateCommentView.as_view(), name = 'create_comment'),
+
 ]

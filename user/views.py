@@ -6,7 +6,7 @@ from rest_framework.decorators import permission_classes
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from django.http import JsonResponse
-from rest_framework import viewsets
+from rest_framework import viewsets,generics
 from .models import Ord_user, Organizer
 from django.contrib.auth.hashers import check_password
 from rest_framework import status
@@ -277,4 +277,86 @@ class NewPasswordView(APIView):
                 return Response({'error': 'mistake.'}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
 
+
+
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Ord_user, Organizer
+from django.shortcuts import get_object_or_404
+
+class UserProfileAPIView(APIView):
+    def get(self, request, username, role):
+        if role == 'Ord_user':
+            user_profile = get_object_or_404(Ord_user, username=username)
+            profile_data = {
+                'username': user_profile.username,
+                'last_name': user_profile.last_name,
+                'first_name': user_profile.first_name,
+                'email': user_profile.email,
+                'role': user_profile.role,
+                'photo': user_profile.photo,
+                'phone_number': str(user_profile.phone_number),
+                'gender': user_profile.gender,
+                'date_of_birth': user_profile.date_of_birth,
+                'country': user_profile.country
+            }
+            return Response(profile_data)
+        elif role == 'Organizer':
+            organizer_profile = get_object_or_404(Organizer, username=username)
+
+            profile_data = {
+                'username': organizer_profile.username,
+                'last_name': organizer_profile.last_name,
+                'first_name': organizer_profile.first_name,
+                'email': organizer_profile.email,
+                'role': organizer_profile.role,
+                'photo': organizer_profile.photo,
+                'phone_number': str(organizer_profile.phone_number),
+                'gender': organizer_profile.gender,
+                'date_of_birth': organizer_profile.date_of_birth,
+                'country': organizer_profile.country
+            }
+            return Response(profile_data)
+        else:
+            return Response({'error': 'Invalid role'}, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, username, role):
+        data = request.data  # Retrieve data from the request
+
+        if role == 'Ord_user':
+            user_profile = get_object_or_404(Ord_user, username=username)
+
+            user_profile.last_name = data.get('last_name', user_profile.last_name)
+            user_profile.first_name = data.get('first_name', user_profile.first_name)
+            user_profile.email = data.get('email', user_profile.email)
+            user_profile.role = data.get('role', user_profile.role)
+            user_profile.photo = data.get('photo', user_profile.photo)
+            user_profile.phone_number = data.get('phone_number', user_profile.phone_number)
+            user_profile.gender = data.get('gender', user_profile.gender)
+            user_profile.date_of_birth = data.get('date_of_birth', user_profile.date_of_birth)
+            user_profile.country = data.get('country', user_profile.country)
+            
+            user_profile.save()
+            return Response({'message': 'Profile updated successfully'})
+        
+        elif role == 'Organizer':
+            organizer_profile = get_object_or_404(Organizer, username=username)
+
+            organizer_profile.last_name = data.get('last_name', organizer_profile.last_name)
+            organizer_profile.first_name = data.get('first_name', organizer_profile.first_name)
+            organizer_profile.email = data.get('email', organizer_profile.email)
+            organizer_profile.role = data.get('role', organizer_profile.role)
+            organizer_profile.photo = data.get('photo', organizer_profile.photo)
+            organizer_profile.phone_number = data.get('phone_number', organizer_profile.phone_number)
+            organizer_profile.gender = data.get('gender', organizer_profile.gender)
+            organizer_profile.date_of_birth = data.get('date_of_birth', organizer_profile.date_of_birth)
+            organizer_profile.country = data.get('country', organizer_profile.country)
+
+            organizer_profile.save()
+            return Response({'message': 'Profile updated successfully'})
+        
+        else:
+            return Response({'error': 'Invalid role'}, status=status.HTTP_400_BAD_REQUEST)
 

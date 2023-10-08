@@ -1,6 +1,7 @@
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 
+
 from django.db import models
 
 
@@ -26,6 +27,9 @@ class Ord_user(models.Model):
     email_token = models.IntegerField(null=True, blank=True)
     is_email_confirmed = models.BooleanField(default=False)
     recover_token = models.IntegerField(null=True, blank=True)
+    country = models.CharField(null=True, blank=True, max_length=255)
+
+    
 
 
 
@@ -52,4 +56,5 @@ class Organizer(models.Model):
     email_token = models.IntegerField(null=True, blank=True)
     is_email_confirmed = models.BooleanField(default=False)
     recover_token = models.IntegerField(null=True, blank=True)
+    country = models.CharField(null=True, blank=True, max_length=255)
 

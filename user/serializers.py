@@ -88,3 +88,6 @@ class NewPasswordSerializer(serializers.Serializer):
     password = serializers.CharField(max_length = 255)
     confirm_password = serializers.CharField(max_length = 255)
     username = serializers.CharField(max_length = 255)
+
+
+

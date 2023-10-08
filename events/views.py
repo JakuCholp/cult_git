@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets, filters
 from .models import Event, Favorite,  Comment, Event_Category, Event_Statistic
-from .serializers import EventSerializer, FavoriteSerializer, CommentSerializer, EventCategorySerializer, EventStaticSerializer, EventStatSerializer, EventPostSerializer, CreateFavoriteSerializer, CreateCommentSerializer
+from .serializers import EventSerializer, FavoriteSerializer, CommentSerializer, EventCategorySerializer, EventStaticSerializer, EventStatSerializer
 from rest_framework.views import APIView
 from django.utils import timezone
 from rest_framework.response import Response
@@ -24,20 +24,12 @@ class EventViewSet(viewsets.ModelViewSet):
     filterset_class = EventFilter
     search_fields = ['description', 'location', 'title', 'event_type__name']
 
-    def create(self, request, *args, **kwargs):
-        return Response({"detail": "Method 'POST' not allowed on this endpoint."},
-                        status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-
 
 
 class FavoriteViewSet(viewsets.ModelViewSet):
     queryset = Favorite.objects.all()
     serializer_class = FavoriteSerializer
 
-    def create(self, request, *args, **kwargs):
-        return Response({"detail": "Method 'POST' not allowed on this endpoint."},
-                        status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 
@@ -46,10 +38,6 @@ class FavoriteViewSet(viewsets.ModelViewSet):
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-
-    def create(self, request, *args, **kwargs):
-        return Response({"detail": "Method 'POST' not allowed on this endpoint."},
-                        status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 
@@ -153,106 +141,3 @@ class Event_StatisticView(viewsets.ModelViewSet):
 
 
 
-
-class CreateEventView(APIView):
-    @extend_schema(
-        description="method post for Event",
-        request= EventPostSerializer,
-        responses={200: {"message": "Event is created."}}
-        )
-    def post(self, request):
-        serializer = EventPostSerializer(data = request.data)
-        if serializer.is_valid():
-            username = serializer.validated_data['username']
-            title = serializer.validated_data['title']
-            event_type_id = serializer.validated_data['event_type_id']
-            description = serializer.validated_data['description']
-            start_datetime = serializer.validated_data['start_datetime']
-            end_datetime = serializer.validated_data['end_datetime']
-            location = serializer.validated_data['location']
-            image = serializer.validated_data['image']
-            ticket_price = serializer.validated_data['ticket_price']
-            count_user = serializer.validated_data['count_user']
-            max_capacity = serializer.validated_data['max_capacity']
-            duration = serializer.validated_data['duration']
-
-            try:
-                user = Organizer.objects.get(username=username)
-            except Organizer.DoesNotExist:
-                raise PermissionDenied("Ты не организатор.")
-            
-            try:
-                event_type_obj = Event_Category.objects.get(id = event_type_id)
-            except Event_Statistic.DoesNotExist:
-                raise Http404("Event category not found with the provided id")
-            
-
-            event = Event.objects.create(
-                title=title,
-                creator=user,
-                event_type=event_type_obj,
-                description=description,
-                start_datetime=start_datetime,
-                end_datetime=end_datetime,
-                location=location,
-                image=image,
-                ticket_price=ticket_price,
-                count_user=count_user,
-                max_capacity=max_capacity,
-                duration=duration
-            )
-            return Response({'message': 'Event created successfully'})
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-
-class CreateFavoriteView(APIView):
-    @extend_schema(
-        description="method post for Favorite",
-        request= CreateFavoriteSerializer,
-        responses={200: {"message": "Favorite is created."}}
-        )
-    def post(self, request):
-        serializer = CreateFavoriteSerializer(data = request.data)
-        if serializer.is_valid():
-            username = serializer.validated_data['username']
-            event_id = serializer.validated_data['event_id']
-            event = Event.objects.get(id=event_id)
-            try:
-                user = Ord_user.objects.get(username=username)
-                fav = Favorite.objects.create(event = event,ord_user = user)
-                return Response({'message': 'Favorite created successfully'})
-
-            except:
-                user = Organizer.objects.get(username=username)
-                fav = Favorite.objects.create(event = event,organizer = user)
-                return Response({'message': 'Favorite created successfully'})
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            
-
-
-
-
-class CreateCommentView(APIView):
-    @extend_schema(
-        description="method post for Comment",
-        request= CreateCommentSerializer,
-        responses={200: {"message": "Comment is created."}}
-        )
-    def post(self, request):
-        serializer = CreateCommentSerializer(data = request.data)
-        if serializer.is_valid():
-            username = serializer.validated_data['username']
-            event_id = serializer.validated_data['event_id']
-            text = serializer.validated_data['text']
-            event = Event.objects.get(id=event_id)
-            try:
-                user = Ord_user.objects.get(username=username)
-                comment = Comment.objects.create(event = event,ord_user = user, text=text)
-                return Response({'message': 'Comment created successfully'})
-
-            except:
-                user = Organizer.objects.get(username=username)
-                comment = Comment.objects.create(event = event,organizer = user, text=text)
-                return Response({'message': 'Comment created successfully'})
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            

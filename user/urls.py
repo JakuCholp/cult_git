@@ -17,5 +17,6 @@ urlpatterns = [
     path('send_ps/', views.SendToRecoverPassword.as_view(), name = 'send_ps'),
     path('check_ps/', views.VerificationPasswordCodeAPIView.as_view(), name = 'check_ps'),
     path('new_ps/', views.NewPasswordView.as_view(), name='new_ps' ),
+    path('user_profile/<str:username>/<str:role>/', views.UserProfileAPIView.as_view(), name='user_profile'),
     path('', include(router.urls)),
 ]
