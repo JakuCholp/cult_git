@@ -1,7 +1,7 @@
 from django.shortcuts import render
 import jwt
 from datetime import datetime, timedelta
-from .serializers import Ord_userSerializer, OrganizerSerializer, LoginSerializer,RecoverPasswordSerializer, VerificationPasswordCodeSerializer, NewPasswordSerializer, OrganizerUserEventSerializer
+from .serializers import Ord_userSerializer, OrganizerSerializer, LoginSerializer,RecoverPasswordSerializer, VerificationPasswordCodeSerializer, NewPasswordSerializer, OrganizerUserEventSerializer, UsersProfileSerializer
 from rest_framework.decorators import permission_classes
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
@@ -19,6 +19,7 @@ import random
 import smtplib
 from django.core.mail import send_mail
 from django.contrib.auth.hashers import make_password
+from events.models import Event_Category
 
 
 
@@ -326,38 +327,59 @@ class UserProfileAPIView(APIView):
         else:
             return Response({'error': 'Invalid role'}, status=status.HTTP_400_BAD_REQUEST)
 
+
+
+            
+class UserUpdateAPIVIEW(APIView):
+    @extend_schema(
+        description="user's profile",
+        request= UsersProfileSerializer,
+        responses={200: {"message": "user successfully got."}}
+        )
+
+
     def put(self, request, username, role):
         data = request.data  
+        serializer = UsersProfileSerializer(data=data)
+        if serializer.is_valid():
+            if role == 'Ord_user':
+                user_profile = get_object_or_404(Ord_user, username=username)
 
-        if role == 'Ord_user':
-            user_profile = get_object_or_404(Ord_user, username=username)
+                last_name = serializer.validated_data['last_name']
+                first_name = serializer.validated_data['first_name']
+                email = serializer.validated_data['email']
+                role = serializer.validated_data['role']
+                photo = serializer.validated_data['photo']
+                phone_number = serializer.validated_data['phone_number']
+                country = serializer.validated_data['country']
+                
+                
+                user_profile.last_name = last_name
+                user_profile.first_name = first_name
+                user_profile.email = email
+                user_profile.role = role
+                user_profile.photo = photo
+                user_profile.phone_number = phone_number
+                user_profile.country = country
+                user_profile.save()
+                return Response({'message': 'Profile updated successfully'})
+            
+            elif role == 'Organizer':
+                organizer_profile = get_object_or_404(Organizer, username=username)
 
-            user_profile.last_name = data.get('last_name', user_profile.last_name)
-            user_profile.first_name = data.get('first_name', user_profile.first_name)
-            user_profile.email = data.get('email', user_profile.email)
-            user_profile.role = data.get('role', user_profile.role)
-            user_profile.photo = data.get('photo', user_profile.photo)
-            user_profile.phone_number = data.get('phone_number', user_profile.phone_number)
-            user_profile.country = data.get('country', user_profile.country)
-            user_profile.save()
-            return Response({'message': 'Profile updated successfully'})
-        
-        elif role == 'Organizer':
-            organizer_profile = get_object_or_404(Organizer, username=username)
+                organizer_profile.last_name = data.get('last_name', organizer_profile.last_name)
+                organizer_profile.first_name = data.get('first_name', organizer_profile.first_name)
+                organizer_profile.email = data.get('email', organizer_profile.email)
+                organizer_profile.role = data.get('role', organizer_profile.role)
+                organizer_profile.photo = data.get('photo', organizer_profile.photo)
+                organizer_profile.phone_number = data.get('phone_number', organizer_profile.phone_number)
+                organizer_profile.country = data.get('country', organizer_profile.country)
 
-            organizer_profile.last_name = data.get('last_name', organizer_profile.last_name)
-            organizer_profile.first_name = data.get('first_name', organizer_profile.first_name)
-            organizer_profile.email = data.get('email', organizer_profile.email)
-            organizer_profile.role = data.get('role', organizer_profile.role)
-            organizer_profile.photo = data.get('photo', organizer_profile.photo)
-            organizer_profile.phone_number = data.get('phone_number', organizer_profile.phone_number)
-            organizer_profile.country = data.get('country', organizer_profile.country)
-
-            organizer_profile.save()
-            return Response({'message': 'Profile updated successfully'})
-        
-        else:
-            return Response({'error': 'Invalid role'}, status=status.HTTP_400_BAD_REQUEST)
+                organizer_profile.save()
+                return Response({'message': 'Profile updated successfully'})
+            
+            else:
+                return Response({'error': 'Invalid role'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
@@ -398,3 +420,16 @@ class AddEventToOrdUserView(APIView):
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+
+
+
+# class Comfort_timeAPI(APIView):
+#     def post(self, request):
+#         serializer = Compfort_timeSerializer(data = request.data)
+#         if serializer.is_valid():
+#             event_type_id = serializer.validated_data['']
+#             max_capacity = serializer.validated_data['max_capacity']
+#             start_datetime = serializer.validated_data['start_datetime']
+#             min_age = serializer.validated_data['min_age']
+#             event_type = Event_Category.objects.get(id = event_type_id)
+#             who_is_free = Ord_user.objects.filter( >= min_age).filter(interests__in=[event_type])

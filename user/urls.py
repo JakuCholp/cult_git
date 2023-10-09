@@ -20,5 +20,7 @@ urlpatterns = [
     path('add_org/<int:organizer_id>/add_event/<int:event_id>/', views.AddEventToOrganizerView.as_view(), name='add_event_to_organizer'),
     path('add_ord/<int:ord_user_id>/add_event/<int:event_id>/', views.AddEventToOrganizerView.as_view(), name='add_event_to_organizer'),
     path('user_profile/<str:username>/<str:role>/', views.UserProfileAPIView.as_view(), name='user_profile'),
+    path('user_update_profile/<str:username>/<str:role>/', views.UserUpdateAPIVIEW.as_view(), name='user_update_profile'),
+
     path('', include(router.urls)),
 ]

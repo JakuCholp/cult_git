@@ -18,6 +18,7 @@ class Event(models.Model):
     description = models.TextField()
     start_datetime = models.DateTimeField()
     end_datetime = models.DateTimeField()
+    min_age = models.IntegerField()
     location = models.TextField(max_length=255)
     image = models.ImageField(upload_to='events_image', default='events_image/logo.png')
     ticket_price = models.DecimalField(max_digits=10, decimal_places=2)

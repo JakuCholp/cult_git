@@ -109,6 +109,24 @@ class OrdUserEventSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+# class Compfort_timeSerializer(serializers.Serializer):
+#     event_type_id = serializers.IntegerField()
+#     max_capacity = serializers.IntegerField()
+#     start_datetime = serializers.DateTimeField()
+#     min_age = serializers.IntegerField()
+
+
+
+
+class UsersProfileSerializer(serializers.Serializer):
+    last_name = serializers.CharField(max_length = 255)
+    first_name = serializers.CharField(max_length = 255)
+    email = serializers.EmailField()
+    role = serializers.CharField(max_length = 255)
+    photo = serializers.CharField(max_length = 255)
+    phone_number = serializers.CharField(max_length = 255)
+    country = serializers.CharField(max_length = 255)
+
 
 
 
