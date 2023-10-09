@@ -107,3 +107,8 @@ class OrdUserEventSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrdUserEvent
         fields = '__all__'
+
+
+
+
+

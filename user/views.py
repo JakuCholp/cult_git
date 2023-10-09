@@ -135,6 +135,9 @@ class OrganizerView(viewsets.ModelViewSet):
 
 
 
+
+
+
 class VerificationCodeAPIView(APIView):
     @extend_schema(
         description="verify_email",
@@ -369,7 +372,6 @@ from django.shortcuts import get_object_or_404
 from events.models import Event
 
 class AddEventToOrganizerView(APIView):
-
     def post(self, request, organizer_id, event_id):
         organizer = get_object_or_404(Organizer, id=organizer_id)
         event = get_object_or_404(Event, id=event_id)

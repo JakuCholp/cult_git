@@ -26,7 +26,7 @@ class Ord_user(models.Model):
     recover_token = models.IntegerField(null=True, blank=True)
     country = models.CharField(null=True, blank=True, max_length=255)
     events = models.ManyToManyField('events.Event', through='OrdUserEvent')
-    # interests = models.ManyToManyField()
+    interests = models.ManyToManyField('events.Event_Category', through='OrdUserInterests')
     is_busy = models.BooleanField(default=False)
 
     
@@ -36,6 +36,11 @@ class OrdUserEvent(models.Model):
     event = models.ForeignKey('events.Event', on_delete=models.CASCADE)
     ord_user = models.ForeignKey(Ord_user, on_delete=models.CASCADE)
 
+
+
+class OrdUserInterests(models.Model):
+    ord_user = models.ForeignKey('user.Ord_user', on_delete=models.CASCADE)
+    interest = models.ForeignKey('events.Event_Category', on_delete=models.CASCADE)
 
 
 

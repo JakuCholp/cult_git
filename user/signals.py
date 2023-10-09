@@ -61,7 +61,7 @@ def check_existing_username(sender, instance, **kwargs):
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import OrganizerUserEvent, OrganizerInterests
+from .models import OrganizerUserEvent, OrganizerInterests, OrdUserEvent, OrdUserInterests
 
 @receiver(post_save, sender=OrganizerUserEvent)
 def create_organizer_interests(sender, instance, created, **kwargs):
@@ -71,6 +71,17 @@ def create_organizer_interests(sender, instance, created, **kwargs):
         organizer_interests = OrganizerInterests.objects.create(
             interest=event_category,
             organizer=instance.organizer_user
+        )
+
+
+@receiver(post_save, sender=OrdUserEvent)
+def create_organizer_interests(sender, instance, created, **kwargs):
+    if created:
+
+        event_category = instance.event.event_type
+        ordUser_interests = OrdUserInterests.objects.create(
+            interest=event_category,
+            ord_user=instance.ord_user
         )
 
 
