@@ -393,32 +393,30 @@ from .serializers import OrganizerUserEventSerializer, OrdUserEventSerializer
 from django.shortcuts import get_object_or_404
 from events.models import Event
 
-class AddEventToOrganizerView(APIView):
-    def post(self, request, organizer_id, event_id):
-        organizer = get_object_or_404(Organizer, id=organizer_id)
-        event = get_object_or_404(Event, id=event_id)
+class AddEventView(APIView):
+    def post(self, request, username, role, event_id):
+        if role == 'organizer':
+            organizer = get_object_or_404(Organizer, username=username)
+            event = get_object_or_404(Event, id=event_id)
 
 
-        organizer_user_event = OrganizerUserEvent.objects.create(organizer=organizer, event=event)
-
-        serializer = OrganizerUserEventSerializer(organizer_user_event)
-
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+            organizer_user_event = OrganizerUserEvent.objects.create(organizer=organizer, event=event)
+            serializer = OrganizerUserEventSerializer(organizer_user_event)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
     
 
 
+        elif role == 'Ord_user':
 
-class AddEventToOrdUserView(APIView):
-    def post(self, request, ord_user_id, event_id):
-        ord_user = get_object_or_404(Ord_user, id=ord_user_id)
-        event = get_object_or_404(Event, id=event_id)
+            ord_user = get_object_or_404(Ord_user, username=username)
+            event = get_object_or_404(Event, id=event_id)
 
 
-        ord_user_event = OrdUserEvent.objects.create(organizer=ord_user, event=event)
+            ord_user_event = OrdUserEvent.objects.create(organizer=ord_user, event=event)
 
-        serializer = OrdUserEventSerializer(ord_user_event)
+            serializer = OrdUserEventSerializer(ord_user_event)
 
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 
@@ -427,9 +425,13 @@ class AddEventToOrdUserView(APIView):
 #     def post(self, request):
 #         serializer = Compfort_timeSerializer(data = request.data)
 #         if serializer.is_valid():
-#             event_type_id = serializer.validated_data['']
+#             event_type_id = serializer.validated_data['event_type_id']
 #             max_capacity = serializer.validated_data['max_capacity']
 #             start_datetime = serializer.validated_data['start_datetime']
 #             min_age = serializer.validated_data['min_age']
+
+
 #             event_type = Event_Category.objects.get(id = event_type_id)
-#             who_is_free = Ord_user.objects.filter( >= min_age).filter(interests__in=[event_type])
+#             current_year = timezone.now().year
+#             min_age_year = current_year - min_age
+#             who_is_free = Ord_user.objects.filter(date_of_birth__lte =  min_age_year).filter(interests__in=[event_type]).filter(is_busy = False)
