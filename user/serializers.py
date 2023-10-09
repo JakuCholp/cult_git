@@ -109,11 +109,11 @@ class OrdUserEventSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-# class Compfort_timeSerializer(serializers.Serializer):
-#     event_type_id = serializers.IntegerField()
-#     max_capacity = serializers.IntegerField()
-#     start_datetime = serializers.DateTimeField()
-#     min_age = serializers.IntegerField()
+class Compfort_timeSerializer(serializers.Serializer):
+    event_type_id = serializers.IntegerField()
+    max_capacity = serializers.IntegerField()
+    start_datetime = serializers.DateTimeField()
+    min_age = serializers.IntegerField()
 
 
 

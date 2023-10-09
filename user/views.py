@@ -1,7 +1,7 @@
 from django.shortcuts import render
 import jwt
 from datetime import datetime, timedelta
-from .serializers import Ord_userSerializer, OrganizerSerializer, LoginSerializer,RecoverPasswordSerializer, VerificationPasswordCodeSerializer, NewPasswordSerializer, OrganizerUserEventSerializer, UsersProfileSerializer
+from .serializers import Ord_userSerializer, OrganizerSerializer, LoginSerializer,RecoverPasswordSerializer, VerificationPasswordCodeSerializer, NewPasswordSerializer, OrganizerUserEventSerializer, UsersProfileSerializer,Compfort_timeSerializer
 from rest_framework.decorators import permission_classes
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
@@ -421,17 +421,21 @@ class AddEventView(APIView):
 
 
 
-# class Comfort_timeAPI(APIView):
-#     def post(self, request):
-#         serializer = Compfort_timeSerializer(data = request.data)
-#         if serializer.is_valid():
-#             event_type_id = serializer.validated_data['event_type_id']
-#             max_capacity = serializer.validated_data['max_capacity']
-#             start_datetime = serializer.validated_data['start_datetime']
-#             min_age = serializer.validated_data['min_age']
+class Comfort_timeAPI(APIView):
+    def post(self, request):
+        serializer = Compfort_timeSerializer(data = request.data)
+        if serializer.is_valid():
+            event_type_id = serializer.validated_data['event_type_id']
+            max_capacity = serializer.validated_data['max_capacity']
+            min_age = serializer.validated_data['min_age']
 
 
-#             event_type = Event_Category.objects.get(id = event_type_id)
-#             current_year = timezone.now().year
-#             min_age_year = current_year - min_age
-#             who_is_free = Ord_user.objects.filter(date_of_birth__lte =  min_age_year).filter(interests__in=[event_type]).filter(is_busy = False)
+            event_type = Event_Category.objects.get(id = event_type_id)
+            current_year = timezone.now().year
+            min_age_year = current_year - min_age
+            who_is_free = Ord_user.objects.filter(date_of_birth__lte =  min_age_year).filter(interests__in=[event_type]).filter(is_busy = False).count()
+
+            if max_capacity >= 2 * who_is_free:
+                return Response({'message': 'Вам лучше провести в другой день.'})
+            else:
+                return Response({'message': 'Идеальное время.'})
