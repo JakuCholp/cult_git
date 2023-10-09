@@ -12,3 +12,7 @@ from .models import Event
 def calculate_duration(sender, instance, **kwargs):
     duration = (instance.end_datetime - instance.start_datetime).seconds // 60
     instance.duration = duration
+
+
+
+

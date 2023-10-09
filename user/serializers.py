@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Ord_user, Organizer
 from django.contrib.auth.hashers import make_password
+from .models import OrganizerUserEvent, OrdUserEvent
 
 class Ord_userSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(write_only=True)
@@ -91,3 +92,18 @@ class NewPasswordSerializer(serializers.Serializer):
 
 
 
+
+
+
+class OrganizerUserEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrganizerUserEvent
+        fields = '__all__'
+
+
+
+
+class OrdUserEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrdUserEvent
+        fields = '__all__'

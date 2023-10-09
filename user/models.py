@@ -1,9 +1,6 @@
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
-
-
 from django.db import models
-
 
 
 
@@ -28,8 +25,17 @@ class Ord_user(models.Model):
     is_email_confirmed = models.BooleanField(default=False)
     recover_token = models.IntegerField(null=True, blank=True)
     country = models.CharField(null=True, blank=True, max_length=255)
+    events = models.ManyToManyField('events.Event', through='OrdUserEvent')
+    # interests = models.ManyToManyField()
+    is_busy = models.BooleanField(default=False)
 
     
+
+
+class OrdUserEvent(models.Model):
+    event = models.ForeignKey('events.Event', on_delete=models.CASCADE)
+    ord_user = models.ForeignKey(Ord_user, on_delete=models.CASCADE)
+
 
 
 
@@ -57,4 +63,20 @@ class Organizer(models.Model):
     is_email_confirmed = models.BooleanField(default=False)
     recover_token = models.IntegerField(null=True, blank=True)
     country = models.CharField(null=True, blank=True, max_length=255)
+    events = models.ManyToManyField('events.Event', through='OrganizerUserEvent')
+    is_busy = models.BooleanField(default=False)
+    interests = models.ManyToManyField('events.Event_Category', through='OrganizerInterests')
+
+    
+
+
+class OrganizerUserEvent(models.Model):
+    event = models.ForeignKey('events.Event', on_delete=models.CASCADE)
+    organizer_user = models.ForeignKey('user.Organizer', on_delete=models.CASCADE)
+
+
+class OrganizerInterests(models.Model):
+    organizer = models.ForeignKey('user.Organizer', on_delete=models.CASCADE)
+    interest = models.ForeignKey('events.Event_Category', on_delete=models.CASCADE)
+
 

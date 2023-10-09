@@ -1,7 +1,7 @@
 from django.shortcuts import render
 import jwt
 from datetime import datetime, timedelta
-from .serializers import Ord_userSerializer, OrganizerSerializer, LoginSerializer,RecoverPasswordSerializer, VerificationPasswordCodeSerializer, NewPasswordSerializer
+from .serializers import Ord_userSerializer, OrganizerSerializer, LoginSerializer,RecoverPasswordSerializer, VerificationPasswordCodeSerializer, NewPasswordSerializer, OrganizerUserEventSerializer
 from rest_framework.decorators import permission_classes
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
@@ -19,6 +19,7 @@ import random
 import smtplib
 from django.core.mail import send_mail
 from django.contrib.auth.hashers import make_password
+
 
 
 
@@ -323,7 +324,7 @@ class UserProfileAPIView(APIView):
             return Response({'error': 'Invalid role'}, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, username, role):
-        data = request.data  # Retrieve data from the request
+        data = request.data  
 
         if role == 'Ord_user':
             user_profile = get_object_or_404(Ord_user, username=username)
@@ -334,10 +335,7 @@ class UserProfileAPIView(APIView):
             user_profile.role = data.get('role', user_profile.role)
             user_profile.photo = data.get('photo', user_profile.photo)
             user_profile.phone_number = data.get('phone_number', user_profile.phone_number)
-            user_profile.gender = data.get('gender', user_profile.gender)
-            user_profile.date_of_birth = data.get('date_of_birth', user_profile.date_of_birth)
             user_profile.country = data.get('country', user_profile.country)
-            
             user_profile.save()
             return Response({'message': 'Profile updated successfully'})
         
@@ -350,8 +348,6 @@ class UserProfileAPIView(APIView):
             organizer_profile.role = data.get('role', organizer_profile.role)
             organizer_profile.photo = data.get('photo', organizer_profile.photo)
             organizer_profile.phone_number = data.get('phone_number', organizer_profile.phone_number)
-            organizer_profile.gender = data.get('gender', organizer_profile.gender)
-            organizer_profile.date_of_birth = data.get('date_of_birth', organizer_profile.date_of_birth)
             organizer_profile.country = data.get('country', organizer_profile.country)
 
             organizer_profile.save()
@@ -359,4 +355,44 @@ class UserProfileAPIView(APIView):
         
         else:
             return Response({'error': 'Invalid role'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .models import OrganizerUserEvent, OrdUserEvent
+from .serializers import OrganizerUserEventSerializer, OrdUserEventSerializer
+from django.shortcuts import get_object_or_404
+from events.models import Event
+
+class AddEventToOrganizerView(APIView):
+
+    def post(self, request, organizer_id, event_id):
+        organizer = get_object_or_404(Organizer, id=organizer_id)
+        event = get_object_or_404(Event, id=event_id)
+
+
+        organizer_user_event = OrganizerUserEvent.objects.create(organizer=organizer, event=event)
+
+        serializer = OrganizerUserEventSerializer(organizer_user_event)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+
+
+
+class AddEventToOrdUserView(APIView):
+    def post(self, request, ord_user_id, event_id):
+        ord_user = get_object_or_404(Ord_user, id=ord_user_id)
+        event = get_object_or_404(Event, id=event_id)
+
+
+        ord_user_event = OrdUserEvent.objects.create(organizer=ord_user, event=event)
+
+        serializer = OrdUserEventSerializer(ord_user_event)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 

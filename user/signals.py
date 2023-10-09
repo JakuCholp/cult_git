@@ -56,3 +56,21 @@ def check_existing_username(sender, instance, **kwargs):
     existing_user = Ord_user.objects.filter(username=instance.username).exists()
     if existing_user:
         raise ValidationError('Пользователь с таким username уже существует в модели OrdUser.')
+    
+
+
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from .models import OrganizerUserEvent, OrganizerInterests
+
+@receiver(post_save, sender=OrganizerUserEvent)
+def create_organizer_interests(sender, instance, created, **kwargs):
+    if created:
+
+        event_category = instance.event.event_type
+        organizer_interests = OrganizerInterests.objects.create(
+            interest=event_category,
+            organizer=instance.organizer_user
+        )
+
+
