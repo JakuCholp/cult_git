@@ -361,9 +361,7 @@ class UserUpdateAPIVIEW(APIView):
         data = request.data  
         serializer = UsersProfileSerializer(data=data)
         if serializer.is_valid():
-            if role == 'Ord_user':
                 user_profile = get_object_or_404(Ord_user, username=username)
-
                 last_name = serializer.validated_data['last_name']
                 first_name = serializer.validated_data['first_name']
                 email = serializer.validated_data['email']
@@ -381,13 +379,9 @@ class UserUpdateAPIVIEW(APIView):
                 user_profile.phone_number = phone_number
                 user_profile.country = country
                 user_profile.save()
-                updated_serializer = UsersProfileSerializer(user_profile)
-                return Response({'message': 'Profile updated successfully', 'data': updated_serializer.data}, status=status.HTTP_200_OK)
-            else:
-                return Response({'error': 'Invalid role'}, status=status.HTTP_400_BAD_REQUEST)
-            
+                return Response({'message': 'Profile updated successfully'}, status=status.HTTP_200_OK)
         else:
-            return Response({'error': 'Invalid role'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Invalid data'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
