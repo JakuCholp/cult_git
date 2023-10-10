@@ -451,6 +451,12 @@ class Comfort_timeAPI(APIView):
 
 class Change_photo(APIView):
     parser_classes = [MultiPartParser]
+    @extend_schema(
+        description="user's photo",
+        request= Change_photo_Serializer,
+        responses={200: {"message": "user successfully got."}}
+        )
+    
     def put(self, request, username, role):
         serializer = Change_photo_Serializer(data=request.data)
         if serializer.is_valid():

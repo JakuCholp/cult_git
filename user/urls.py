@@ -21,7 +21,7 @@ urlpatterns = [
     path('user_profile/<str:username>/<str:role>/', views.UserProfileAPIView.as_view(), name='user_profile'),
     path('user_update_profile/<str:username>/<str:role>/', views.UserUpdateAPIVIEW.as_view(), name='user_update_profile'),
     path('comfort_time/', views.Comfort_timeAPI.as_view(), name = 'comfort_time'),
-    path('change_photo/', views.Change_photo.as_view(), name = 'change_photo'),
+    path('change_photo/<str:username>/<str:role>/', views.Change_photo.as_view(), name = 'change_photo'),
 
     path('', include(router.urls)),
 ]
