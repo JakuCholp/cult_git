@@ -300,6 +300,9 @@ from .models import Ord_user, Organizer
 from django.shortcuts import get_object_or_404
 
 
+
+
+
 class UserProfileAPIView(APIView):
     parser_classes = [MultiPartParser]
     def get(self, request, username, role):
