@@ -21,7 +21,7 @@ from django.core.mail import send_mail
 from django.contrib.auth.hashers import make_password
 from events.models import Event_Category
 from rest_framework.parsers import MultiPartParser
-
+import base64
 
 
 
@@ -307,14 +307,21 @@ class UserProfileAPIView(APIView):
     parser_classes = [MultiPartParser]
     def get(self, request, username, role):
         if role == 'Ord_user':
+
             user_profile = get_object_or_404(Ord_user, username=username)
+            if user_profile.photo:
+                with open(user_profile.photo.path, "rb" ) as image_file:
+                    encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
+            else:
+                encoded_image = None
+
             profile_data = {
                 'username': user_profile.username,
                 'last_name': user_profile.last_name,
                 'first_name': user_profile.first_name,
                 'email': user_profile.email,
                 'role': user_profile.role,
-                'photo': user_profile.photo,
+                'photo': encoded_image,
                 'phone_number': str(user_profile.phone_number),
                 'gender': user_profile.gender,
                 'date_of_birth': user_profile.date_of_birth,
