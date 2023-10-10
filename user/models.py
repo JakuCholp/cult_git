@@ -16,7 +16,7 @@ class Ord_user(models.Model):
     first_name = models.CharField(max_length=100,null=True, blank=True)
     email = models.EmailField(unique=True)
     role = 'Ord_user'
-    photo = models.ImageField(upload_to='profile', default='profile/avatarka.jpg')    
+    photo = models.ImageField(upload_to='profile', default='profile/avatarka.jpg', null = True, blank=True)    
     phone_number = PhoneNumberField(unique = True)
     gender = models.CharField(max_length=100, choices=GENDER_CHOICES)
     date_of_birth =models.DateField(null=True, blank=True)

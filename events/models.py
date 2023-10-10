@@ -68,9 +68,5 @@ class Event_Statistic(models.Model):
 
 
 
-class location_for_map(models.Model):
-    location_name = models.CharField(max_length = 255)
-    lon = models.FloatField() 
-    lat = models.FloatField()
 
 

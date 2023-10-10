@@ -383,23 +383,11 @@ class UserUpdateAPIVIEW(APIView):
                 user_profile.save()
                 updated_serializer = UsersProfileSerializer(user_profile)
                 return Response({'message': 'Profile updated successfully', 'data': updated_serializer.data}, status=status.HTTP_200_OK)
-            
-            elif role == 'Organizer':
-                organizer_profile = get_object_or_404(Organizer, username=username)
-
-                organizer_profile.last_name = data.get('last_name', organizer_profile.last_name)
-                organizer_profile.first_name = data.get('first_name', organizer_profile.first_name)
-                organizer_profile.email = data.get('email', organizer_profile.email)
-                organizer_profile.role = data.get('role', organizer_profile.role)
-                organizer_profile.photo = data.get('photo', organizer_profile.photo)
-                organizer_profile.phone_number = data.get('phone_number', organizer_profile.phone_number)
-                organizer_profile.country = data.get('country', organizer_profile.country)
-
-                organizer_profile.save()
-                return Response({'message': 'Profile updated successfully'})
-            
             else:
                 return Response({'error': 'Invalid role'}, status=status.HTTP_400_BAD_REQUEST)
+            
+        else:
+            return Response({'error': 'Invalid role'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
