@@ -1,7 +1,7 @@
 from django.shortcuts import render
 import jwt
 from datetime import datetime, timedelta
-from .serializers import Ord_userSerializer, OrganizerSerializer, LoginSerializer,RecoverPasswordSerializer, VerificationPasswordCodeSerializer, NewPasswordSerializer, OrganizerUserEventSerializer, UsersProfileSerializer,Compfort_timeSerializer
+from .serializers import Ord_userSerializer, OrganizerSerializer, LoginSerializer,RecoverPasswordSerializer, VerificationPasswordCodeSerializer, NewPasswordSerializer, OrganizerUserEventSerializer, UsersProfileSerializer,Compfort_timeSerializer, Change_photo_Serializer
 from rest_framework.decorators import permission_classes
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
@@ -366,7 +366,6 @@ class UserUpdateAPIVIEW(APIView):
                 first_name = serializer.validated_data['first_name']
                 email = serializer.validated_data['email']
                 role = serializer.validated_data['role']
-                photo = serializer.validated_data['photo']
                 phone_number = serializer.validated_data['phone_number']
                 country = serializer.validated_data['country']
                 
@@ -375,7 +374,6 @@ class UserUpdateAPIVIEW(APIView):
                 user_profile.first_name = first_name
                 user_profile.email = email
                 user_profile.role = role
-                user_profile.photo = photo
                 user_profile.phone_number = phone_number
                 user_profile.country = country
                 user_profile.save()
@@ -449,3 +447,19 @@ class Comfort_timeAPI(APIView):
                 return Response({'message': 'Вам лучше провести в другой день.'})
             else:
                 return Response({'message': 'Идеальное время.'})
+
+
+class Change_photo(APIView):
+    parser_classes = [MultiPartParser]
+    def put(self, request, username, role):
+        serializer = Change_photo_Serializer(data=request.data)
+        if serializer.is_valid():
+            ord_user = get_object_or_404(Ord_user, username=username)
+            photo = serializer.validated_data['photo']
+            ord_user.photo = photo
+            ord_user.save()
+            return Response({'message': 'Profile updated successfully'}, status=status.HTTP_200_OK)
+
+
+
+
