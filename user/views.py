@@ -97,10 +97,16 @@ class LoginView(APIView):
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
-        role = request.data.get('role')  
-
+        role = request.data.get('role') 
         
-    
+
+        try:
+            user = Ord_user.objects.get(username=username)
+        except:
+            user = Organizer.objects.get(username=username)
+
+
+        user_id = user.id
         user = authenticate_Ord_user(username=username, password=password)
 
         if user:
@@ -108,7 +114,7 @@ class LoginView(APIView):
             token_str = access_token.decode('utf-8')
             refresh_token = generate_refresh_token(user, role)
             ref_token_str = refresh_token.decode('utf-8')
-            return JsonResponse({'token': token_str, 'refresh': ref_token_str}, status=200)
+            return JsonResponse({'token': token_str, 'refresh': ref_token_str, 'id_ord_user': user_id}, status=200)
         else:
             user = authenticate_Organizer(username=username, password=password)
             if user:
@@ -116,7 +122,7 @@ class LoginView(APIView):
                 token_str = access_token.decode('utf-8')
                 refresh_token = generate_refresh_token(user, role)
                 ref_token_str = refresh_token.decode('utf-8')
-                return JsonResponse({'token': token_str, 'refresh': ref_token_str}, status=200)
+                return JsonResponse({'token': token_str, 'refresh': ref_token_str, 'id_organizer_user': user_id}, status=200)
             else:
                 return JsonResponse({'error': 'Invalid credentials'}, status=400)
 
