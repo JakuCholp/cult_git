@@ -18,6 +18,10 @@ from django.http import Http404
 from drf_spectacular.utils import extend_schema
 from rest_framework.parsers import MultiPartParser
 
+
+
+
+
 class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     parser_classes = [MultiPartParser]
@@ -25,6 +29,10 @@ class EventViewSet(viewsets.ModelViewSet):
     filter_backends = (dj_filters.DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter)
     filterset_class = EventFilter
     search_fields = ['description', 'location', 'title', 'event_type__name']
+
+
+
+
 
 
 
