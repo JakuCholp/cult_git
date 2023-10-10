@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from django.http import JsonResponse
 from rest_framework import viewsets,generics
-from .models import Ord_user, Organizer
+from .models import Ord_user, Organizer, OrdUserTickets
 from django.contrib.auth.hashers import check_password
 from rest_framework import status
 from rest_framework.response import Response
@@ -430,10 +430,11 @@ class AddEventView(APIView):
             ord_user = get_object_or_404(Ord_user, username=username)
             event = get_object_or_404(Event, id=event_id)
 
-            # tickeets = OrdUserTickets.objects.create(event = event)
+            
 
 
-            ord_user_event = OrdUserEvent.objects.create(organizer=ord_user, event=event)
+            ord_user_event = OrdUserEvent.objects.create(ord_user=ord_user, event=event)
+            ord_user_tickets = OrdUserTickets.objects.create(ord_user = ord_user)
 
             serializer = OrdUserEventSerializer(ord_user_event)
 

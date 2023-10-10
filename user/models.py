@@ -43,9 +43,9 @@ class OrdUserInterests(models.Model):
     interest = models.ForeignKey('events.Event_Category', on_delete=models.CASCADE)
 
 
-#class OrdUserTickets(models.Model):
-    #ord_user = models.ForeignKey('user.Ord_user', on_delete=models.CASCADE)
-    #tickets = models.ImageField(default='tickets/QR-cod1.png')
+class OrdUserTickets(models.Model):
+    ord_user = models.ForeignKey('user.Ord_user', on_delete=models.CASCADE)
+    tickets = models.ImageField(default='tickets/QR-cod1.png')
 
 
 
