@@ -123,7 +123,6 @@ class UsersProfileSerializer(serializers.Serializer):
     first_name = serializers.CharField(max_length = 255)
     email = serializers.EmailField()
     role = serializers.CharField(max_length = 255)
-    photo = serializers.ImageField()
     phone_number = serializers.CharField(max_length = 255)
     country = serializers.CharField(max_length = 255)
 
