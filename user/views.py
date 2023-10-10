@@ -299,7 +299,9 @@ from rest_framework import status
 from .models import Ord_user, Organizer
 from django.shortcuts import get_object_or_404
 
+
 class UserProfileAPIView(APIView):
+    parser_classes = [MultiPartParser]
     def get(self, request, username, role):
         if role == 'Ord_user':
             user_profile = get_object_or_404(Ord_user, username=username)
@@ -418,10 +420,13 @@ class AddEventView(APIView):
             ord_user = get_object_or_404(Ord_user, username=username)
             event = get_object_or_404(Event, id=event_id)
 
+            # tickeets = OrdUserTickets.objects.create(event = event)
+
 
             ord_user_event = OrdUserEvent.objects.create(organizer=ord_user, event=event)
 
             serializer = OrdUserEventSerializer(ord_user_event)
+
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
