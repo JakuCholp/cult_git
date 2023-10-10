@@ -366,6 +366,7 @@ class UserUpdateAPIVIEW(APIView):
                 first_name = serializer.validated_data['first_name']
                 email = serializer.validated_data['email']
                 role = serializer.validated_data['role']
+                photo = serializer.validated_data['photo']
                 phone_number = serializer.validated_data['phone_number']
                 country = serializer.validated_data['country']
                 
@@ -374,6 +375,7 @@ class UserUpdateAPIVIEW(APIView):
                 user_profile.first_name = first_name
                 user_profile.email = email
                 user_profile.role = role
+                user_profile.photo = photo
                 user_profile.phone_number = phone_number
                 user_profile.country = country
                 user_profile.save()
