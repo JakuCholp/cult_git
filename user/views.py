@@ -100,14 +100,15 @@ class LoginView(APIView):
         role = request.data.get('role') 
         
 
-        try:
-            user = Ord_user.objects.get(username=username)
-        except:
-            user = Organizer.objects.get(username=username)
+        # try:
+        user = Ord_user.objects.get(username=username)
+        # except:
+        #     user = Organizer.objects.get(username=username)
 
 
         user_id = user.id
         user = authenticate_Ord_user(username=username, password=password)
+        role = user.role
 
         if user:
             access_token = generate_token(user, role)
@@ -115,16 +116,16 @@ class LoginView(APIView):
             refresh_token = generate_refresh_token(user, role)
             ref_token_str = refresh_token.decode('utf-8')
             return JsonResponse({'token': token_str, 'refresh': ref_token_str, 'id_ord_user': user_id}, status=200)
+        # else:
+        #     user = authenticate_Organizer(username=username, password=password)
+        #     if user:
+        #         access_token = generate_token(user, role)
+        #         token_str = access_token.decode('utf-8')
+        #         refresh_token = generate_refresh_token(user, role)
+        #         ref_token_str = refresh_token.decode('utf-8')
+        #         return JsonResponse({'token': token_str, 'refresh': ref_token_str, 'id_organizer_user': user_id}, status=200)
         else:
-            user = authenticate_Organizer(username=username, password=password)
-            if user:
-                access_token = generate_token(user, role)
-                token_str = access_token.decode('utf-8')
-                refresh_token = generate_refresh_token(user, role)
-                ref_token_str = refresh_token.decode('utf-8')
-                return JsonResponse({'token': token_str, 'refresh': ref_token_str, 'id_organizer_user': user_id}, status=200)
-            else:
-                return JsonResponse({'error': 'Invalid credentials'}, status=400)
+            return JsonResponse({'error': 'Invalid credentials'}, status=400)
 
 
 
