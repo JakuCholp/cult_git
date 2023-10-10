@@ -2,6 +2,7 @@ from django.db import models
 from user.models import Ord_user, Organizer
 from django.core.exceptions import ValidationError
 from user.models import Organizer
+# from django_admin_geomap import GeoItem
 
 
 # Create your models here.
@@ -63,5 +64,13 @@ class Event_Statistic(models.Model):
     was_recived = models.IntegerField(null=True, blank=True)
     income = models.IntegerField(null=True, blank=True)
     more_than_aver = models.IntegerField(null=True, blank=True)
+
+
+
+
+class location_for_map(models.Model):
+    location_name = models.CharField(max_length = 255)
+    lon = models.FloatField() 
+    lat = models.FloatField()
 
 

@@ -381,7 +381,8 @@ class UserUpdateAPIVIEW(APIView):
                 user_profile.phone_number = phone_number
                 user_profile.country = country
                 user_profile.save()
-                return Response({'message': 'Profile updated successfully'})
+                updated_serializer = UsersProfileSerializer(user_profile)
+                return Response({'message': 'Profile updated successfully', 'data': updated_serializer.data}, status=status.HTTP_200_OK)
             
             elif role == 'Organizer':
                 organizer_profile = get_object_or_404(Organizer, username=username)
@@ -411,6 +412,7 @@ from .models import OrganizerUserEvent, OrdUserEvent
 from .serializers import OrganizerUserEventSerializer, OrdUserEventSerializer
 from django.shortcuts import get_object_or_404
 from events.models import Event
+import random
 
 class AddEventView(APIView):
     def post(self, request, username, role, event_id):
@@ -431,10 +433,13 @@ class AddEventView(APIView):
             event = get_object_or_404(Event, id=event_id)
 
             
-
-
+            tickets = 'tickets/QR-cod1.png'
+            random_number = random.randint(1, 5)
+            new_tickets = tickets.replace('1', str(random_number))
             ord_user_event = OrdUserEvent.objects.create(ord_user=ord_user, event=event)
-            ord_user_tickets = OrdUserTickets.objects.create(ord_user = ord_user)
+
+
+            ord_user_tickets = OrdUserTickets.objects.create(ord_user = ord_user, tickets=new_tickets)
 
             serializer = OrdUserEventSerializer(ord_user_event)
 
