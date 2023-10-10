@@ -16,9 +16,11 @@ from user.models import Ord_user, Organizer
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from drf_spectacular.utils import extend_schema
+from rest_framework.parsers import MultiPartParser
 
 class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
+    parser_classes = [MultiPartParser]
     serializer_class = EventSerializer
     filter_backends = (dj_filters.DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter)
     filterset_class = EventFilter

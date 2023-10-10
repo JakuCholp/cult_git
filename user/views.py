@@ -20,6 +20,7 @@ import smtplib
 from django.core.mail import send_mail
 from django.contrib.auth.hashers import make_password
 from events.models import Event_Category
+from rest_framework.parsers import MultiPartParser
 
 
 
@@ -331,13 +332,12 @@ class UserProfileAPIView(APIView):
 
             
 class UserUpdateAPIVIEW(APIView):
+    parser_classes = [MultiPartParser]
     @extend_schema(
         description="user's profile",
         request= UsersProfileSerializer,
         responses={200: {"message": "user successfully got."}}
         )
-
-
     def put(self, request, username, role):
         data = request.data  
         serializer = UsersProfileSerializer(data=data)
